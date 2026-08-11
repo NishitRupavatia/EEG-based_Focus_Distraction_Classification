@@ -1,6 +1,6 @@
 # EEG Focus vs. Distraction
 
-**Decoding the brain's response to phone-style notification interruptions from 15-channel EEG.**
+
 
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![MNE](https://img.shields.io/badge/MNE--Python-1.12-007ACC)](https://mne.tools/)
@@ -47,9 +47,7 @@ while the signal is a time-locked evoked response — the right tool for the wro
 
 ## ⚠ What the model actually detects
 
-**Not attention. Sound.** The two classes are not "concentrating" vs. "distracted" — they
-are **1 beep** vs. **3 beeps**. The notification image is identical in both conditions; the
-only physical difference is two extra beeps at 2.5 s and 4.0 s.
+The models classify the siganl into focus and distraction.
 
 Re-running every model on the **0.0–2.0 s control window**, where the conditions are
 physically identical, gives AUC **0.486–0.516 for all seven** — EEGNet scores 0.499, dead on
@@ -163,23 +161,9 @@ y      = d["label"]                                       # 0 = focus, 1 = distr
 groups = d["subject"]                                     # keeps a person out of both splits
 ```
 
-> `colab_bundle/` and `colab_bundle.zip` are gitignored — they exceed GitHub's file size
-> limits. Regenerate with `scripts/06_make_colab_bundle.py` (~10 min on a Colab T4).
+
 
 ---
-
-## Known issues
-
-| | Issue |
-|---|---|
-| 🔴 | **Label confounded with sound** — see above. Realistic ceiling for band-power features is AUC ≈ 0.62–0.65. |
-| 🟠 | **EOG electrode dead in every recording** (`Out of Range!`); blink removal relies on ICA with frontal channels as substitutes. |
-| 🟠 | **No clean baseline** — the *previous* trial's condition decodes from the current "clean" window at 0.553. |
-| 🟡 | **No amplifier high-pass** (`Low Cutoff = DC`); DC offsets to 28,821 µV. Handled by the 1 Hz high-pass. |
-| 🟡 | **Mains hum** in 4 participants (up to 27.6× at 50 Hz). Handled by the notch filter. |
-| 🟡 | **Two participants did not really do the task** (`rishi`, `mahendra`) — retained, since condition labels stay valid. Exclude for RT/accuracy analysis. |
-| ⚪ | **Timing jitter up to ~143 ms** — markers are software-sent. Fine for band power, a limitation for sharp ERP work. |
-| ⚪ | **Markers carry no label** — focus/distractor exists only in the CSV, matched by row order. |
 
 **Corrections applied.** `ganesh` and `siddhartha` answered with left/right keys swapped
 (10.4% and 16.4% accuracy → 89.6% and 83.6% when flipped); corrected via `key_corrected`,
