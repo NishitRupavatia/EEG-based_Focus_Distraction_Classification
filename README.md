@@ -67,11 +67,6 @@ Four independent lines of evidence:
 > brain respond?"* at AUC 0.794 across unseen people. It is **not** a detector of whether
 > someone is concentrating.
 
-**For any future recording, the single change that matters: give both conditions the same
-number of beeps.**
-
-![Time-resolved decoding](figures/fig7_time_resolved.png)
-
 *Decoding over time — flat at chance while conditions are identical, then two sharp peaks
 ~250 ms after each extra beep. The clearest evidence of the confound.*
 
