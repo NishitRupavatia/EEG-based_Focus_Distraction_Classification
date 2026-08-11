@@ -1,0 +1,11 @@
+# Colab bundle (contains 300+ MB data archives, exceeds GitHub file size limits)
+colab_bundle/
+colab_bundle.zip
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/

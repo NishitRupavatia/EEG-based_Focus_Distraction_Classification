@@ -1,0 +1,175 @@
+Loading data ...
+  4544 trials, 23 subjects, focus=2273 distractor=2271
+  window 'post': raw (4544, 15, 750), EEGNet input (4544, 15, 375)
+  window 'pre': raw (4544, 15, 500), EEGNet input (4544, 15, 250)
+
+SUBJECT-INDEPENDENT 5-FOLD SPLIT
+  fold 0: train 14 | val 4 | test 5   test=[np.str_('sathwik'), np.str_('mahendra'), np.str_('rishi'), np.str_('vipul'), np.str_('rakshit')]
+  fold 1: train 14 | val 4 | test 5   test=[np.str_('rachit'), np.str_('digvijay'), np.str_('david'), np.str_('harshavardhan'), np.str_('aryan')]
+  fold 2: train 14 | val 4 | test 5   test=[np.str_('Ashish'), np.str_('siddhartha'), np.str_('nishit'), np.str_('bhawesh'), np.str_('naveen')]
+  fold 3: train 15 | val 4 | test 4   test=[np.str_('prashant'), np.str_('vansh'), np.str_('anurag'), np.str_('bhaskar')]
+  fold 4: train 15 | val 4 | test 4   test=[np.str_('sooraj'), np.str_('aditya'), np.str_('pragnesh'), np.str_('ganesh')]
+
+--- fold 0  window 'post'  train 2789 / val 760 / test 995 ---
+    EEGNet stopped at epoch 122 (best 82)
+    LR-bandpower   acc 0.563  auc 0.592
+    LDA-shrinkage  acc 0.689  auc 0.745
+    CSP+LDA        acc 0.520  auc 0.506
+    Riemann-TS     acc 0.551  auc 0.573
+    Xdawn+TS       acc 0.617  auc 0.676
+    EEGNet         acc 0.697  auc 0.767
+
+--- fold 0  window 'pre' [CONTROL]  train 2789 / val 760 / test 995 ---
+    EEGNet stopped at epoch 42 (best 2)
+    LR-bandpower   acc 0.502  auc 0.499
+    LDA-shrinkage  acc 0.497  auc 0.507
+    CSP+LDA        acc 0.497  auc 0.513
+    Riemann-TS     acc 0.492  auc 0.485
+    Xdawn+TS       acc 0.533  auc 0.535
+    EEGNet         acc 0.483  auc 0.470
+
+--- fold 1  window 'post'  train 2749 / val 797 / test 998 ---
+    EEGNet stopped at epoch 64 (best 24)
+    LR-bandpower   acc 0.568  auc 0.595
+    LDA-shrinkage  acc 0.742  auc 0.818
+    CSP+LDA        acc 0.504  auc 0.517
+    Riemann-TS     acc 0.556  auc 0.582
+    Xdawn+TS       acc 0.676  auc 0.754
+    EEGNet         acc 0.772  auc 0.832
+
+--- fold 1  window 'pre' [CONTROL]  train 2749 / val 797 / test 998 ---
+    EEGNet stopped at epoch 42 (best 2)
+    LR-bandpower   acc 0.517  auc 0.495
+    LDA-shrinkage  acc 0.491  auc 0.488
+    CSP+LDA        acc 0.524  auc 0.524
+    Riemann-TS     acc 0.485  auc 0.489
+    Xdawn+TS       acc 0.489  auc 0.507
+    EEGNet         acc 0.502  auc 0.510
+
+--- fold 2  window 'post'  train 2753 / val 798 / test 993 ---
+    EEGNet stopped at epoch 167 (best 127)
+    LR-bandpower   acc 0.579  auc 0.613
+    LDA-shrinkage  acc 0.695  auc 0.773
+    CSP+LDA        acc 0.502  auc 0.511
+    Riemann-TS     acc 0.566  auc 0.581
+    Xdawn+TS       acc 0.657  auc 0.697
+    EEGNet         acc 0.715  auc 0.794
+
+--- fold 2  window 'pre' [CONTROL]  train 2753 / val 798 / test 993 ---
+    EEGNet stopped at epoch 56 (best 16)
+    LR-bandpower   acc 0.501  auc 0.505
+    LDA-shrinkage  acc 0.496  auc 0.484
+    CSP+LDA        acc 0.498  auc 0.501
+    Riemann-TS     acc 0.472  auc 0.482
+    Xdawn+TS       acc 0.517  auc 0.533
+    EEGNet         acc 0.490  auc 0.487
+
+--- fold 3  window 'post'  train 2985 / val 760 / test 799 ---
+    EEGNet stopped at epoch 140 (best 100)
+    LR-bandpower   acc 0.605  auc 0.648
+    LDA-shrinkage  acc 0.722  auc 0.799
+    CSP+LDA        acc 0.506  auc 0.493
+    Riemann-TS     acc 0.561  auc 0.582
+    Xdawn+TS       acc 0.676  auc 0.728
+    EEGNet         acc 0.722  auc 0.804
+
+--- fold 3  window 'pre' [CONTROL]  train 2985 / val 760 / test 799 ---
+    EEGNet stopped at epoch 41 (best 1)
+    LR-bandpower   acc 0.462  auc 0.456
+    LDA-shrinkage  acc 0.473  auc 0.458
+    CSP+LDA        acc 0.486  auc 0.488
+    Riemann-TS     acc 0.508  auc 0.505
+    Xdawn+TS       acc 0.506  auc 0.510
+    EEGNet         acc 0.511  auc 0.509
+
+--- fold 4  window 'post'  train 2987 / val 798 / test 759 ---
+    EEGNet stopped at epoch 165 (best 125)
+    LR-bandpower   acc 0.568  auc 0.602
+    LDA-shrinkage  acc 0.672  auc 0.743
+    CSP+LDA        acc 0.491  auc 0.491
+    Riemann-TS     acc 0.534  auc 0.540
+    Xdawn+TS       acc 0.638  auc 0.697
+    EEGNet         acc 0.714  auc 0.773
+
+--- fold 4  window 'pre' [CONTROL]  train 2987 / val 798 / test 759 ---
+    EEGNet stopped at epoch 41 (best 1)
+    LR-bandpower   acc 0.509  auc 0.509
+    LDA-shrinkage  acc 0.486  auc 0.495
+    CSP+LDA        acc 0.482  auc 0.493
+    Riemann-TS     acc 0.487  auc 0.504
+    Xdawn+TS       acc 0.503  auc 0.497
+    EEGNet         acc 0.522  auc 0.519
+
+========================================================================================================
+MAIN WINDOW 2.0-5.0 s
+========================================================================================================
+model                     accuracybalanced_accuracy             auc        f1_macro           kappa     sensitivity     specificity
+EEGNet                0.724+-0.028    0.724+-0.028    0.794+-0.026    0.724+-0.028    0.448+-0.056    0.721+-0.039    0.727+-0.025
+LDA-shrinkage         0.704+-0.028    0.704+-0.028    0.775+-0.033    0.704+-0.028    0.408+-0.056    0.701+-0.025    0.707+-0.033
+Xdawn+TS              0.653+-0.026    0.653+-0.025    0.711+-0.031    0.652+-0.026    0.306+-0.051    0.665+-0.067    0.640+-0.038
+LR-bandpower          0.576+-0.017    0.576+-0.017    0.610+-0.023    0.576+-0.017    0.153+-0.034    0.574+-0.020    0.579+-0.016
+Riemann-TS            0.553+-0.012    0.553+-0.012    0.572+-0.018    0.553+-0.013    0.107+-0.025    0.551+-0.031    0.556+-0.012
+CSP+LDA               0.504+-0.010    0.505+-0.010    0.504+-0.011    0.475+-0.036    0.009+-0.020    0.644+-0.204    0.365+-0.204
+SHUFFLED-control      0.486+-0.026    0.486+-0.026    0.477+-0.036    0.486+-0.026   -0.028+-0.052    0.486+-0.041    0.486+-0.014
+
+========================================================================================================
+CONTROL WINDOW 0.0-2.0 s  (conditions identical - everything must be ~0.50)
+========================================================================================================
+model                     accuracybalanced_accuracy             auc        f1_macro           kappa     sensitivity     specificity
+Xdawn+TS              0.509+-0.016    0.509+-0.016    0.516+-0.017    0.508+-0.016    0.019+-0.033    0.530+-0.052    0.488+-0.064
+SHUFFLED-control      0.510+-0.016    0.510+-0.016    0.508+-0.026    0.510+-0.016    0.020+-0.031    0.520+-0.017    0.500+-0.020
+CSP+LDA               0.498+-0.016    0.497+-0.016    0.504+-0.015    0.492+-0.019   -0.005+-0.033    0.498+-0.118    0.497+-0.120
+EEGNet                0.502+-0.015    0.502+-0.016    0.499+-0.020    0.486+-0.011    0.003+-0.031    0.560+-0.188    0.443+-0.178
+Riemann-TS            0.489+-0.013    0.489+-0.013    0.493+-0.011    0.489+-0.013   -0.022+-0.026    0.485+-0.019    0.494+-0.012
+LR-bandpower          0.498+-0.021    0.498+-0.021    0.493+-0.021    0.498+-0.021   -0.004+-0.042    0.496+-0.021    0.500+-0.028
+LDA-shrinkage         0.489+-0.010    0.489+-0.010    0.486+-0.018    0.489+-0.010   -0.022+-0.020    0.476+-0.008    0.502+-0.017
+
+========================================================================================================
+CONFUSION MATRICES  (summed over the 5 folds, main window)
+
+  LR-bandpower   (n=4544)
+                 pred focus   pred distr
+    true focus        1314          959     (57.8% correct)
+    true distr         969         1302     (57.3% correct)
+
+  LDA-shrinkage   (n=4544)
+                 pred focus   pred distr
+    true focus        1612          661     (70.9% correct)
+    true distr         679         1592     (70.1% correct)
+
+  CSP+LDA   (n=4544)
+                 pred focus   pred distr
+    true focus         843         1430     (37.1% correct)
+    true distr         819         1452     (63.9% correct)
+
+  Riemann-TS   (n=4544)
+                 pred focus   pred distr
+    true focus        1262         1011     (55.5% correct)
+    true distr        1015         1256     (55.3% correct)
+
+  Xdawn+TS   (n=4544)
+                 pred focus   pred distr
+    true focus        1453          820     (63.9% correct)
+    true distr         759         1512     (66.6% correct)
+
+  EEGNet   (n=4544)
+                 pred focus   pred distr
+    true focus        1651          622     (72.6% correct)
+    true distr         629         1642     (72.3% correct)
+
+  SHUFFLED-control   (n=4544)
+                 pred focus   pred distr
+    true focus        1107         1166     (48.7% correct)
+    true distr        1169         1102     (48.5% correct)
+
+========================================================================================================
+EEGNet TRAINING LENGTH
+  max allowed 300, early-stopping patience 40
+  stopped at  : mean 88  range 41-167
+  best epoch  : mean 48  range 1-127
+
+========================================================================================================
+MODEL FAILURES: none - every model fitted successfully in every fold.
+
+total runtime 24.0 min
+written -> results_cv5.csv, predictions_cv5.csv, eegnet_history.csv, models/
