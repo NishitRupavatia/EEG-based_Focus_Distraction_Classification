@@ -2,6 +2,11 @@
 colab_bundle/
 colab_bundle.zip
 
+# Internal working notes — content folded into README.md, kept locally only
+FEATURE.md
+PROGRESS.md
+RESULTS.md
+
 # Python
 __pycache__/
 *.py[cod]
