@@ -1,0 +1,113 @@
+﻿=== band sweep started 2026-08-16 16:57:29 ===
+bands/ already complete - nothing to prepare
+
+95 jobs total, 0 already done, 95 to run on 3 workers x 2 threads
+
+  -> launched LMDA-Net full fold0   (94 queued)
+  -> launched LMDA-Net full fold1   (93 queued)
+  -> launched LMDA-Net full fold2   (92 queued)
+[done] LMDA-Net  full     fold1  acc 0.728  auc 0.793  30.7 min  (ep 47, best 7)
+  [1] 31 min elapsed, 94 left
+  -> launched LMDA-Net full fold3   (91 queued)
+[done] LMDA-Net  full     fold2  acc 0.715  auc 0.797  36.4 min  (ep 56, best 16)
+  [2] 37 min elapsed, 93 left
+  -> launched LMDA-Net full fold4   (90 queued)
+[done] LMDA-Net  full     fold0  acc 0.716  auc 0.773  52.0 min  (ep 81, best 41)
+  [3] 52 min elapsed, 92 left
+  -> launched LMDA-Net alpha fold0   (89 queued)
+[done] LMDA-Net  full     fold3  acc 0.721  auc 0.788  34.1 min  (ep 51, best 11)
+  [4] 65 min elapsed, 91 left
+  -> launched LMDA-Net alpha fold1   (88 queued)
+[done] LMDA-Net  full     fold4  acc 0.729  auc 0.781  44.7 min  (ep 67, best 27)
+  [5] 82 min elapsed, 90 left
+  -> launched LMDA-Net alpha fold2   (87 queued)
+[done] LMDA-Net  alpha    fold0  acc 0.583  auc 0.612  33.8 min  (ep 54, best 14)
+  [6] 86 min elapsed, 89 left
+  -> launched LMDA-Net alpha fold3   (86 queued)
+[done] LMDA-Net  alpha    fold1  acc 0.584  auc 0.604  33.9 min  (ep 55, best 15)
+  [7] 100 min elapsed, 88 left
+  -> launched LMDA-Net alpha fold4   (85 queued)
+[done] LMDA-Net  alpha    fold2  acc 0.589  auc 0.626  29.0 min  (ep 47, best 7)
+  [8] 111 min elapsed, 87 left
+  -> launched LMDA-Net beta fold0   (84 queued)
+[done] LMDA-Net  alpha    fold3  acc 0.632  auc 0.658  33.2 min  (ep 50, best 10)
+  [9] 120 min elapsed, 86 left
+  -> launched LMDA-Net beta fold1   (83 queued)
+[done] LMDA-Net  beta     fold0  acc 0.542  auc 0.552  27.3 min  (ep 44, best 4)
+  [10] 138 min elapsed, 85 left
+  -> launched LMDA-Net beta fold2   (82 queued)
+[done] LMDA-Net  beta     fold1  acc 0.531  auc 0.534  25.1 min  (ep 42, best 2)
+  [11] 145 min elapsed, 84 left
+  -> launched LMDA-Net beta fold3   (81 queued)
+[done] LMDA-Net  alpha    fold4  acc 0.597  auc 0.627  54.1 min  (ep 84, best 44)
+  [12] 154 min elapsed, 83 left
+  -> launched LMDA-Net beta fold4   (80 queued)
+[done] LMDA-Net  beta     fold2  acc 0.497  auc 0.496  23.1 min  (ep 41, best 1)
+  [13] 162 min elapsed, 82 left
+  -> launched LMDA-Net control fold0   (79 queued)
+[done] LMDA-Net  beta     fold3  acc 0.523  auc 0.532  24.9 min  (ep 41, best 1)
+  [14] 170 min elapsed, 81 left
+  -> launched LMDA-Net control fold1   (78 queued)
+[done] LMDA-Net  control  fold0  acc 0.502  auc 0.503  15.1 min  (ep 41, best 1)
+  [15] 177 min elapsed, 80 left
+  -> launched LMDA-Net control fold2   (77 queued)
+[done] LMDA-Net  beta     fold4  acc 0.526  auc 0.546  28.6 min  (ep 47, best 7)
+  [16] 183 min elapsed, 79 left
+  -> launched LMDA-Net control fold3   (76 queued)
+[done] LMDA-Net  control  fold1  acc 0.505  auc 0.514  14.6 min  (ep 41, best 1)
+  [17] 185 min elapsed, 78 left
+  -> launched LMDA-Net control fold4   (75 queued)
+[done] LMDA-Net  control  fold2  acc 0.498  auc 0.481  14.0 min  (ep 41, best 1)
+  [18] 191 min elapsed, 77 left
+  -> launched LMDA-Net delta fold0   (74 queued)
+[done] LMDA-Net  control  fold3  acc 0.493  auc 0.495  15.0 min  (ep 41, best 1)
+  [19] 198 min elapsed, 76 left
+  -> launched LMDA-Net delta fold1   (73 queued)
+[done] LMDA-Net  control  fold4  acc 0.524  auc 0.521  15.7 min  (ep 42, best 2)
+  [20] 201 min elapsed, 75 left
+  -> launched LMDA-Net delta fold2   (72 queued)
+[done] LMDA-Net  delta    fold0  acc 0.699  auc 0.763  25.8 min  (ep 46, best 6)
+  [21] 217 min elapsed, 74 left
+  -> launched LMDA-Net delta fold3   (71 queued)
+[done] LMDA-Net  delta    fold2  acc 0.673  auc 0.744  24.7 min  (ep 44, best 4)
+  [22] 226 min elapsed, 73 left
+  -> launched LMDA-Net delta fold4   (70 queued)
+[done] LMDA-Net  delta    fold1  acc 0.734  auc 0.812  28.6 min  (ep 51, best 11)
+  [23] 227 min elapsed, 72 left
+  -> launched LMDA-Net gamma fold0   (69 queued)
+[done] LMDA-Net  gamma    fold0  acc 0.516  auc 0.518  23.3 min  (ep 41, best 1)
+  [24] 251 min elapsed, 71 left
+  -> launched LMDA-Net gamma fold1   (68 queued)
+[done] LMDA-Net  delta    fold3  acc 0.707  auc 0.777  46.7 min  (ep 77, best 37)
+[done] LMDA-Net  delta    fold4  acc 0.696  auc 0.753  38.3 min  (ep 63, best 23)
+  [25] 264 min elapsed, 70 left
+  -> launched LMDA-Net gamma fold2   (67 queued)
+  [26] 264 min elapsed, 69 left
+  -> launched LMDA-Net gamma fold3   (66 queued)
+[done] LMDA-Net  gamma    fold1  acc 0.522  auc 0.522  57.3 min  (ep 41, best 1)
+  [27] 308 min elapsed, 68 left
+  -> launched LMDA-Net gamma fold4   (65 queued)
+[done] LMDA-Net  gamma    fold2  acc 0.513  auc 0.502  805.1 min  (ep 41, best 1)
+  [28] 1070 min elapsed, 67 left
+  -> launched LMDA-Net theta fold0   (64 queued)
+[done] LMDA-Net  gamma    fold3  acc 0.484  auc 0.487  807.3 min  (ep 41, best 1)
+  [29] 1072 min elapsed, 66 left
+  -> launched LMDA-Net theta fold1   (63 queued)
+[done] LMDA-Net  gamma    fold4  acc 0.507  auc 0.509  777.4 min  (ep 44, best 4)
+  [30] 1086 min elapsed, 65 left
+  -> launched LMDA-Net theta fold2   (62 queued)
+[done] LMDA-Net  theta    fold1  acc 0.666  auc 0.742  33.7 min  (ep 48, best 8)
+  [31] 1106 min elapsed, 64 left
+  -> launched LMDA-Net theta fold3   (61 queued)
+[done] LMDA-Net  theta    fold0  acc 0.660  auc 0.724  46.1 min  (ep 66, best 26)
+  [32] 1116 min elapsed, 63 left
+  -> launched LMDA-Net theta fold4   (60 queued)
+[done] LMDA-Net  theta    fold2  acc 0.690  auc 0.744  62.8 min  (ep 67, best 27)
+  [33] 1149 min elapsed, 62 left
+  -> launched CTNet full fold0   (59 queued)
+[done] CTNet     full     fold0  acc 0.694  auc 0.756  29.2 min  (ep 69, best 29)
+  [34] 1179 min elapsed, 61 left
+  -> launched CTNet full fold1   (58 queued)
+[done] LMDA-Net  theta    fold3  acc 0.663  auc 0.719  76.5 min  (ep 55, best 15)
+  [35] 1183 min elapsed, 60 left
+  -> launched CTNet full fold2   (57 queued)
