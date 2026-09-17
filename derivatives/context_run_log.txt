@@ -1,0 +1,86 @@
+
+dataset discovered under C:\Users\Piyush Raj\OneDrive\Desktop\EEG_signal_classification\EEG_Focus_Distraction
+  trials              4,544 (2,273 focus / 2,271 distractor)
+  subjects            23  (161-200 trials each)
+  full     (4544, 15, 375)      float32  2.0-5.0 s @ 125 Hz  102 MB
+  control  (4544, 15, 250)      float32  0.0-2.0 s @ 125 Hz  68 MB
+  per-subject z-score  'Ashish': mean -0.0000, std 1.0000  (expected ~0 / ~1)
+
+30 jobs, 0 already done, 30 to run INLINE on NVIDIA GeForce RTX 3050 Ti Laptop GPU (4.3 GB)
+
+[done] full     S=64  fold0  acc 0.693  auc 0.760  1.3 min  (ep 110, best 70)
+  [1/30] 1 min elapsed
+[done] full     S=64  fold1  acc 0.735  auc 0.826  0.8 min  (ep 79, best 39)
+  [2/30] 2 min elapsed
+[done] full     S=64  fold2  acc 0.717  auc 0.798  1.1 min  (ep 121, best 81)
+  [3/30] 3 min elapsed
+[done] full     S=64  fold3  acc 0.647  auc 0.735  0.5 min  (ep 50, best 10)
+  [4/30] 4 min elapsed
+[done] full     S=64  fold4  acc 0.698  auc 0.758  1.5 min  (ep 142, best 102)
+  [5/30] 5 min elapsed
+[done] full     S=16  fold0  acc 0.696  auc 0.749  0.8 min  (ep 94, best 54)
+  [6/30] 6 min elapsed
+[done] full     S=16  fold1  acc 0.737  auc 0.803  0.4 min  (ep 67, best 27)
+  [7/30] 6 min elapsed
+[done] full     S=16  fold2  acc 0.706  auc 0.794  0.9 min  (ep 135, best 95)
+  [8/30] 7 min elapsed
+[done] full     S=16  fold3  acc 0.726  auc 0.797  0.5 min  (ep 116, best 76)
+  [9/30] 8 min elapsed
+[done] full     S=16  fold4  acc 0.694  auc 0.760  0.7 min  (ep 149, best 109)
+  [10/30] 9 min elapsed
+[done] full     S=4   fold0  acc 0.678  auc 0.745  0.5 min  (ep 131, best 91)
+  [11/30] 9 min elapsed
+[done] full     S=4   fold1  acc 0.740  auc 0.824  0.3 min  (ep 73, best 33)
+  [12/30] 9 min elapsed
+[done] full     S=4   fold2  acc 0.724  auc 0.804  0.9 min  (ep 220, best 180)
+  [13/30] 10 min elapsed
+[done] full     S=4   fold3  acc 0.710  auc 0.784  0.4 min  (ep 80, best 40)
+  [14/30] 11 min elapsed
+[done] full     S=4   fold4  acc 0.664  auc 0.720  0.3 min  (ep 55, best 15)
+  [15/30] 11 min elapsed
+[done] full     S=1   fold0  acc 0.705  auc 0.764  0.5 min  (ep 118, best 78)
+  [16/30] 12 min elapsed
+[done] full     S=1   fold1  acc 0.749  auc 0.833  0.5 min  (ep 105, best 65)
+  [17/30] 12 min elapsed
+[done] full     S=1   fold2  acc 0.701  auc 0.780  0.4 min  (ep 80, best 40)
+  [18/30] 12 min elapsed
+[done] full     S=1   fold3  acc 0.670  auc 0.741  0.3 min  (ep 57, best 17)
+  [19/30] 13 min elapsed
+[done] full     S=1   fold4  acc 0.700  auc 0.760  1.0 min  (ep 216, best 176)
+  [20/30] 14 min elapsed
+[done] control  S=64  fold0  acc 0.484  auc 0.479  6.6 min  (ep 52, best 12)
+  [21/30] 20 min elapsed
+[done] control  S=64  fold1  acc 0.491  auc 0.484  0.2 min  (ep 50, best 10)
+  [22/30] 20 min elapsed
+[done] control  S=64  fold2  acc 0.511  auc 0.504  0.2 min  (ep 45, best 5)
+  [23/30] 21 min elapsed
+[done] control  S=64  fold3  acc 0.491  auc 0.497  0.2 min  (ep 47, best 7)
+  [24/30] 21 min elapsed
+[done] control  S=64  fold4  acc 0.490  auc 0.494  0.2 min  (ep 58, best 18)
+  [25/30] 21 min elapsed
+[done] control  S=1   fold0  acc 0.516  auc 0.517  0.2 min  (ep 53, best 13)
+  [26/30] 21 min elapsed
+[done] control  S=1   fold1  acc 0.516  auc 0.506  0.1 min  (ep 44, best 4)
+  [27/30] 21 min elapsed
+[done] control  S=1   fold2  acc 0.459  auc 0.455  0.2 min  (ep 54, best 14)
+  [28/30] 22 min elapsed
+[done] control  S=1   fold3  acc 0.503  auc 0.496  0.2 min  (ep 51, best 11)
+  [29/30] 22 min elapsed
+[done] control  S=1   fold4  acc 0.499  auc 0.504  0.2 min  (ep 50, best 10)
+  [30/30] 22 min elapsed
+
+all jobs finished in 22 min
+
+==========================================================================
+Context Transformer  -  subject-independent 5-fold
+==========================================================================
+  context 1    acc 0.705 +- 0.029   auc 0.776 +- 0.035   kappa 0.410
+  context 4    acc 0.703 +- 0.032   auc 0.775 +- 0.043   kappa 0.407
+  context 16   acc 0.712 +- 0.019   auc 0.781 +- 0.024   kappa 0.424
+  context 64   acc 0.698 +- 0.033   auc 0.775 +- 0.036   kappa 0.397
+
+  cross-trial attention effect: AUC -0.000 (context 64 vs context 1)
+  control window worst |auc-0.5| = 0.008   (at chance, ok)
+  skew stress: recall 0.701 on natural contexts -> 0.626 on pure single-label contexts   (holds up)
+
+written -> C:\Users\Piyush Raj\OneDrive\Desktop\EEG_signal_classification\EEG_Focus_Distraction\derivatives\context_transformer_report.html

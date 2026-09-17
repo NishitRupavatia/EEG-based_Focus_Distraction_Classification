@@ -5,11 +5,13 @@ Pulled out of 04_train.py so that the band sweep (07_bands.py) trains EXACTLY th
 same networks with EXACTLY the same optimiser, early stopping and class weighting.
 One definition, two callers - the two scripts cannot drift apart.
 
-THE FOUR NETWORKS
-  EEGNet        Lawhern et al. 2018   compact separable CNN               ~2.6 k params
-  CTNet         Zhao et al. 2024      EEGNet patch-embed + transformer     ~25 k params
-  LMDA-Net      Miao et al. 2023      channel/depth attention CNN           ~5 k params
+THE NETWORKS
+  EEGNet        Lawhern et al. 2018   compact separable CNN               ~1.7 k params
+  CTNet         Zhao et al. 2024      EEGNet patch-embed + transformer     ~21 k params
+  LMDA-Net      Miao et al. 2023      channel/depth attention CNN           ~4 k params
   EEGConformer  Song et al. 2023      conv patch-embed + transformer      ~573 k params
+  (two more live in their own modules and are only REGISTERED here - see the registry
+   at the bottom: EEGTransformer and ConformerTransformer.)
 
 A NOTE ON SAMPLING RATE
   Everything here is fed the same 125 Hz input that EEGNet has always used in this
@@ -275,21 +277,82 @@ class EEGConformer(nn.Module):
 # =============================================================== the registry
 # Name -> constructor(n_ch, n_samples). 04_train.py and 07_bands.py both read this,
 # so adding a network here adds it to both the main table and the band sweep.
+#
+# EEG Transformer lives in its own module - it is a standalone experiment (attention
+# over raw temporal patches, no convolutional front end) and shares no layer with the
+# four networks above. Registering it here is what lets it reuse train_dl() unchanged,
+# which is the only way its numbers are comparable with theirs. It is NOT in
+# 07_bands.py's DEEP_MODELS list, so the band sweep and its finished jobs are
+# untouched; 09_transformer.py is the script that runs it.
+import sys as _sys                                  # noqa: E402
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # sibling import
+from eeg_transformer import EEGTransformer          # noqa: E402  (kept next to its use)
+
+# Conformer-Transformer is the same kind of addition: its own module, no layer shared
+# with anything above, registered here purely so 11_conformer_transformer.py can reuse
+# train_dl() unchanged. It is NOT in 07_bands.py's DEEP_MODELS list, so the finished
+# band sweep and its jobs are untouched.
+from conformer_transformer import ConformerTransformer   # noqa: E402
+
+# Conformer-LSTM shares its tokenizer and Conformer block WITH the line above - see
+# conformer_lstm.py. The two differ only in what consumes the token sequence, which is
+# what makes the comparison between them mean something.
+from conformer_lstm import ConformerLSTM                 # noqa: E402
+
 DL_MODELS = {
-    "EEGNet":        lambda n_ch, n_t: EEGNet(n_ch, n_t),
-    "CTNet":         lambda n_ch, n_t: CTNet(n_ch, n_t),
-    "LMDA-Net":      lambda n_ch, n_t: LMDANet(n_ch, n_t),
-    "EEG Conformer": lambda n_ch, n_t: EEGConformer(n_ch, n_t),
+    "EEGNet":                 lambda n_ch, n_t: EEGNet(n_ch, n_t),
+    "CTNet":                  lambda n_ch, n_t: CTNet(n_ch, n_t),
+    "LMDA-Net":               lambda n_ch, n_t: LMDANet(n_ch, n_t),
+    "EEG Conformer":          lambda n_ch, n_t: EEGConformer(n_ch, n_t),
+    "EEG Transformer":        lambda n_ch, n_t: EEGTransformer(n_ch, n_t),
+    "Conformer-Transformer":  lambda n_ch, n_t: ConformerTransformer(n_ch, n_t),
+    "Conformer-LSTM":         lambda n_ch, n_t: ConformerLSTM(n_ch, n_t),
 }
 
 
+# ==================================================================== device
+def resolve_device(spec=None):
+    """Which device to train on. 'auto' (the default) picks the GPU if there is one.
+
+    Order of authority: explicit argument > EEG_DEVICE env var > auto. The env var is
+    what the orchestrators set on their worker subprocesses, so `--device` on the
+    command line reaches every job without threading a parameter through each layer.
+
+    A request for CUDA on a machine without it FALLS BACK to CPU with a warning rather
+    than raising: an overnight sweep that dies on job 1 because the driver hiccuped is
+    worse than one that finishes slowly.
+    """
+    spec = (spec or os.environ.get("EEG_DEVICE", "auto")).lower()
+    if spec == "auto":
+        spec = "cuda" if torch.cuda.is_available() else "cpu"
+    if spec.startswith("cuda") and not torch.cuda.is_available():
+        print("  !! CUDA requested but not available - falling back to CPU", flush=True)
+        spec = "cpu"
+    return torch.device(spec)
+
+
+def device_name(dev):
+    dev = torch.device(dev)
+    if dev.type != "cuda":
+        return "cpu"
+    p = torch.cuda.get_device_properties(dev.index or 0)
+    return f"{p.name} ({p.total_memory / 1e9:.1f} GB)"
+
+
 # ============================================================== training loop
-def _run_epoch(model, loader, crit, opt=None):
+def _run_epoch(model, loader, crit, opt=None, device=None):
     train = opt is not None
     model.train(train)
     tot = correct = 0
     loss_sum = 0.0
     for xb, yb in loader:
+        if device is not None:
+            # Batches are staged on the CPU and moved here, one at a time. Keeping the
+            # DataLoader untouched keeps the shuffling and batch composition EXACTLY as
+            # they were on CPU, so a GPU run is the same experiment - and 1.4 MB a batch
+            # is nothing next to a forward pass.
+            xb = xb.to(device, non_blocking=True)
+            yb = yb.to(device, non_blocking=True)
         with torch.set_grad_enabled(train):
             out = model(xb)
             loss = crit(out, yb)
@@ -306,7 +369,7 @@ def _run_epoch(model, loader, crit, opt=None):
 
 
 def train_dl(name, Xtr, ytr, Xva, yva, Xte, tag, seed=42,
-             max_epochs=None, patience=None):
+             max_epochs=None, patience=None, device=None):
     """Train one network with early stopping on validation loss.
 
     Returns (test probabilities, per-epoch history, fitted model, best epoch, stop epoch).
@@ -315,15 +378,24 @@ def train_dl(name, Xtr, ytr, Xva, yva, Xte, tag, seed=42,
 
     max_epochs/patience default to the module constants and are read at CALL time, not
     at import time, so a smoke test can shorten them by setting dl_models.MAX_EPOCHS.
+
+    device defaults to EEG_DEVICE / auto. The MODEL IS BUILT ON THE CPU AND THEN MOVED,
+    which matters: nn.Module.__init__ draws its weights from the CPU generator, so a
+    given seed produces the same initial network whether or not there is a GPU. Only
+    the arithmetic afterwards differs, and only at float32 rounding level.
+
+    The returned model is moved back to the CPU, so callers can torch.save() it and
+    reload it anywhere without a CUDA device present.
     """
     max_epochs = MAX_EPOCHS if max_epochs is None else max_epochs
     patience = PATIENCE if patience is None else patience
+    device = resolve_device(device)
     torch.manual_seed(seed)
     n_ch, n_t = Xtr.shape[1], Xtr.shape[2]
-    model = DL_MODELS[name](n_ch, n_t)
+    model = DL_MODELS[name](n_ch, n_t).to(device)      # built on CPU, then moved
 
     cw = torch.tensor([len(ytr) / (2 * max((ytr == c).sum(), 1)) for c in (0, 1)],
-                      dtype=torch.float32)
+                      dtype=torch.float32, device=device)
     crit = nn.CrossEntropyLoss(weight=cw)
     opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
@@ -332,13 +404,14 @@ def train_dl(name, Xtr, ytr, Xva, yva, Xte, tag, seed=42,
         # duplicated every set in memory, which this 8 GB laptop does not have to spare.
         t = torch.from_numpy(np.ascontiguousarray(X, dtype=np.float32)).unsqueeze(1)
         yy = torch.tensor(y if y is not None else np.zeros(len(X)), dtype=torch.long)
-        return DataLoader(TensorDataset(t, yy), batch_size=BATCH, shuffle=shuf)
+        return DataLoader(TensorDataset(t, yy), batch_size=BATCH, shuffle=shuf,
+                          pin_memory=(device.type == "cuda"))
 
     tr_dl, va_dl = mk(Xtr, ytr, True), mk(Xva, yva)
     best, best_state, bad, hist = np.inf, None, 0, []
     for ep in range(1, max_epochs + 1):
-        trl, tra = _run_epoch(model, tr_dl, crit, opt)
-        val, vaa = _run_epoch(model, va_dl, crit)
+        trl, tra = _run_epoch(model, tr_dl, crit, opt, device)
+        val, vaa = _run_epoch(model, va_dl, crit, device=device)
         hist.append(dict(model=name, tag=tag, epoch=ep, train_loss=trl, val_loss=val,
                          train_acc=tra, val_acc=vaa))
         if val < best - 1e-5:
@@ -360,11 +433,14 @@ def train_dl(name, Xtr, ytr, Xva, yva, Xte, tag, seed=42,
         for i in range(0, len(Xte), BATCH):
             xb = torch.from_numpy(
                 np.ascontiguousarray(Xte[i:i + BATCH], dtype=np.float32)).unsqueeze(1)
-            chunks.append(torch.softmax(model(xb), 1)[:, 1].numpy())
+            chunks.append(torch.softmax(model(xb.to(device)), 1)[:, 1].cpu().numpy())
     p = np.concatenate(chunks)
     for h in hist:
         h["best_epoch"] = best_ep
         h["stopped_epoch"] = stopped
+    model.to("cpu")            # so the caller's torch.save() reloads without a GPU
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
     return p, hist, model, best_ep, stopped
 
 

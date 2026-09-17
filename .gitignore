@@ -1,16 +1,50 @@
-# Colab bundle (contains 300+ MB data archives, exceeds GitHub file size limits)
+# =========================================================== raw recordings
+# ~1.1 GB of BrainVision files (.eeg up to 42 MB each) plus the PsychoPy logs.
+# Too large for GitHub. Everything downstream is regenerated from them by
+# scripts/01 and scripts/02.
+Notification/
+
+# ======================================================= heavy derivatives
+# All regenerable, all binary, ~1.1 GB together.
+derivatives/epochs/          # 360 MB - cleaned trials  (02_preprocess.py)
+derivatives/ica/             # ICA solutions            (02_preprocess.py)
+derivatives/bands/           # 651 MB - model inputs    (07_bands.py --prepare-only)
+derivatives/features.npz     #  63 MB - classical features (03_features.py)
+derivatives/models/          #  22 MB - trained weights (.pt)
+
+# archived and one-off runs
+derivatives/colab_run/
+derivatives/cpu_run_archive_*/
 colab_bundle/
 colab_bundle.zip
 
-# Internal working notes — content folded into README.md, kept locally only
-FEATURE.md
-PROGRESS.md
-RESULTS.md
+# process leftovers
+derivatives/*.pid
+derivatives/*_err.txt
 
-# Python
+# What is deliberately KEPT: every results CSV, every job JSON
+# (band_jobs/, transformer_jobs/, context_jobs/, conformer_jobs/,
+# conformer_lstm_jobs/), the rendered *_report.html files and figures/.
+# Together ~16 MB, and they are the actual results.
+
+# =============================================================== python
 __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
 venv/
+env/
 .ipynb_checkpoints/
+
+# =========================================================== local notes
+FEATURE.md
+PROGRESS.md
+RESULTS.md
+
+# =============================================================== OS / IDE
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

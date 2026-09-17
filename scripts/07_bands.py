@@ -36,7 +36,7 @@ USAGE
   python scripts/07_bands.py --prepare-only  # just build derivatives/bands/
   python scripts/07_bands.py --aggregate     # re-aggregate finished jobs, run nothing
 """
-import os, sys, glob, json, time, argparse, subprocess, warnings
+import os, sys, glob, json, time, hashlib, argparse, subprocess, warnings
 import numpy as np
 import pandas as pd
 
@@ -85,8 +85,15 @@ PRETTY_BAND = {"delta": "Delta", "theta": "Theta", "alpha": "Alpha", "beta": "Be
 
 
 def job_seed(model, cond, fold):
-    """Deterministic per-job seed - parallel order can never change a result."""
-    return (abs(hash((model, cond, fold))) % 10_000) + SEED
+    """Deterministic per-job seed - parallel order can never change a result.
+
+    sha1, not hash(): hash() of a tuple of strings is salted per process unless
+    PYTHONHASHSEED is pinned, so the same job drew a different seed on every run and
+    no result was reproducible. Finished jobs are never recomputed (see pending()),
+    so this changes nothing already on disk - only what a NEW job gets.
+    """
+    h = hashlib.sha1(f"{model}|{cond}|{fold}".encode()).digest()
+    return SEED + int.from_bytes(h[:4], "big") % 10_000
 
 
 def folds_for(subs):
@@ -253,26 +260,65 @@ def pending(jobs):
             if not os.path.exists(os.path.join(JOBS_D, f"{j[0]}__{j[1]}__f{j[2]}.json"))]
 
 
-def orchestrate(workers, threads):
-    """Run pending jobs in a pool of subprocesses, heaviest architecture first.
+def _sorted_pending():
+    """Pending jobs, heaviest architecture first.
 
     LMDA-Net is several times the cost of the rest, so it is dispatched first: starting
     the long jobs early is what keeps the pool from ending with one straggler running
-    alone.
+    alone. Measured on this machine (CPU): LMDA-Net ~21 s/epoch, Conformer ~8, the other
+    two ~4. Unknown names sort last rather than raising.
     """
-    jobs = all_jobs()
-    todo = pending(jobs)
-    # heaviest first, measured on this machine: LMDA-Net ~21 s/epoch, Conformer ~8,
-    # the other two ~4. Unknown names sort last rather than raising.
+    todo = pending(all_jobs())
     order = {"LMDA-Net": 0, "EEG Conformer": 1, "CTNet": 2, "EEGNet": 3}
     todo.sort(key=lambda j: (order.get(j[0], 99), j[1] != "full", j[1], j[2]))
+    return todo
+
+
+def run_inline(device, threads):
+    """Run every pending job sequentially in THIS process. The mode for a GPU.
+
+    One CUDA context costs a few hundred MB of VRAM, so N worker processes on a 4 GB
+    laptop card spend their memory on N copies of the runtime instead of on the work -
+    and they serialise on the one GPU anyway. Running in-process pays that cost once.
+    Resume still works: each job writes its own JSON the moment it finishes, so killing
+    this loop halfway loses nothing but the job in flight.
+    """
+    import torch
+    from dl_models import resolve_device, device_name
+    os.environ["EEG_DEVICE"] = device
+    torch.set_num_threads(threads)
+    dev = resolve_device(device)
+    todo = _sorted_pending()
+    print(f"\n{len(all_jobs())} jobs total, {len(all_jobs())-len(todo)} already done, "
+          f"{len(todo)} to run INLINE on {device_name(dev)}\n", flush=True)
+    t0, failed = time.time(), []
+    for k, (m, c, f) in enumerate(todo, 1):
+        try:
+            run_job(m, c, f)
+        except Exception as e:                     # one bad job must not lose the rest
+            failed.append((m, c, f, f"{type(e).__name__}: {e}"))
+            print(f"  !! FAILED {m} {c} fold{f} - excluded, NOT scored as 0.5 "
+                  f"({type(e).__name__}: {str(e)[:120]})", flush=True)
+        print(f"  [{k}/{len(todo)}] {(time.time()-t0)/60:.0f} min elapsed", flush=True)
+    if failed:
+        print(f"\n{len(failed)} job(s) failed and are excluded from every mean:")
+        for m, c, f, e in failed:
+            print(f"  {m} {c} fold{f}: {e}")
+    print(f"\nall jobs finished in {(time.time()-t0)/60:.0f} min")
+
+
+def orchestrate(workers, threads, device="cpu"):
+    """Run pending jobs in a pool of subprocesses. The mode for a multi-core CPU."""
+    jobs = all_jobs()
+    todo = _sorted_pending()
     print(f"\n{len(jobs)} jobs total, {len(jobs)-len(todo)} already done, "
-          f"{len(todo)} to run on {workers} workers x {threads} threads\n", flush=True)
+          f"{len(todo)} to run on {workers} workers x {threads} threads "
+          f"(device {device})\n", flush=True)
     if not todo:
         return
 
     env = dict(os.environ, OMP_NUM_THREADS=str(threads), MKL_NUM_THREADS=str(threads),
-               EEG_TORCH_THREADS=str(threads))
+               EEG_TORCH_THREADS=str(threads), EEG_DEVICE=device)
     me = os.path.abspath(__file__)
     running, t0, done = [], time.time(), 0
     while todo or running:
@@ -439,6 +485,8 @@ if __name__ == "__main__":
     ap.add_argument("--job", nargs=3, metavar=("MODEL", "COND", "FOLD"))
     ap.add_argument("--workers", type=int, default=5)
     ap.add_argument("--threads", type=int, default=2)
+    ap.add_argument("--device", default="auto",
+                    help="cuda | cpu | auto (default: GPU if one is present)")
     ap.add_argument("--prepare-only", action="store_true")
     ap.add_argument("--aggregate", action="store_true")
     ap.add_argument("--force-prepare", action="store_true")
@@ -453,6 +501,15 @@ if __name__ == "__main__":
     elif a.prepare_only:
         prepare(force=a.force_prepare)
     else:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from dl_models import resolve_device
+        dev = resolve_device(a.device).type
         prepare(force=a.force_prepare)
-        orchestrate(a.workers, a.threads)
+        # On a GPU the jobs serialise on the one device anyway, and every extra worker
+        # process burns a few hundred MB of VRAM on its own CUDA context. Run them in
+        # this process instead. On a CPU, N processes really is a near-linear win.
+        if dev == "cuda":
+            run_inline("cuda", a.threads)
+        else:
+            orchestrate(a.workers, a.threads, dev)
         aggregate()
