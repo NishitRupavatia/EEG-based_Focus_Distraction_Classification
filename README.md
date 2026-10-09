@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EEG Focus vs. Distraction
 
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
@@ -189,3 +190,6 @@ Built with [MNE-Python](https://mne.tools/), [PyTorch](https://pytorch.org/),
 [scikit-learn](https://scikit-learn.org/) and [pyriemann](https://pyriemann.readthedocs.io/).
 EEGNet follows Lawhern et al. (2018); CTNet, LMDA-Net and EEG Conformer follow
 Zhao et al. (2024), Miao et al. (2023) and Song et al. (2023).
+=======
+# EEG-based_Focus_Distraction_Classification
+>>>>>>> 2cdb5572f0930537cb8be221c343647706064752
